@@ -1,0 +1,14 @@
+{% extends "hoteleria/base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<h2>{{ titulo }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="button" type="submit">Guardar</button>
+    <a class="button secondary" href="{% url 'hoteleria:'|add:modelo|add:'_list' %}">Cancelar</a>
+</form>
+{% endblock %}

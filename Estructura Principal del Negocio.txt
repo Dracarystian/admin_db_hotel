@@ -1,0 +1,23 @@
+Estructura Principal del Negocio
+Hotel: Almacena los datos básicos de los establecimientos (nombre, dirección, teléfono) y un resumen numérico de su capacidad operativa (habitaciones ocupadas y disponibles). Su objetivo es ser la entidad central del sistema, ya que la infraestructura, el personal y los clientes se vinculan a un hotel específico para segmentar la información.
+
+Habitación: Representa el inventario físico del hotel. Guarda detalles individuales como la nomenclatura (número), el precio base, apoyo visual (foto) y el personal responsable. Su objetivo es permitir el control detallado y la comercialización de cada espacio disponible.
+
+Reserva: Es la tabla transaccional principal del sistema. Registra la asignación de una habitación a un cliente, definiendo el periodo de estadía y el costo total. Su objetivo es mantener el registro histórico y activo de la ocupación y generar la información necesaria para la facturación.
+
+Catálogos de Clasificación
+Tipo_habitacion: Contiene la lista estandarizada de categorías (Sencilla, Doble, Suite, etc.). Su objetivo es normalizar la clasificación de las habitaciones, evitando inconsistencias en el ingreso de datos y facilitando la búsqueda por categorías.
+
+Estado: Define las situaciones operativas posibles de una habitación (Disponible, Ocupada, Mantenimiento). Su objetivo es proporcionar un indicador rápido del estatus del inventario para la toma de decisiones en recepción.
+
+Gestión de Personal
+Administrador: Registra al personal con perfil gerencial o de supervisión. Su objetivo es identificar a los responsables de cada sede (hotel) para fines de auditoría o autorización de procesos.
+
+Recepcionista: Almacena la información del personal de atención directa. Su objetivo es vincular a los empleados operativos con las gestiones diarias (como la administración de las habitaciones), permitiendo un seguimiento del desempeño y la responsabilidad interna.
+
+Gestión de Huéspedes
+Cliente: Es la tabla principal (o "supertipo") que almacena la información personal y de contacto común a todos los huéspedes (nombre, documento, email). Su objetivo es centralizar los datos compartidos para evitar la duplicación de información y servir como punto de anclaje para cualquier tipo de cliente que ingrese al sistema.
+
+Habitual: Es una tabla especializada (o "subtipo") conectada directamente a la tabla Cliente. Su objetivo es registrar exclusivamente a los huéspedes frecuentes y almacenar atributos que solo le pertenecen a ellos (en este caso, el porcentaje de descuento). Esto mantiene la base de datos limpia, evitando tener columnas vacías en clientes que no aplican para este beneficio.
+
+Esporádico: Es la segunda tabla especializada conectada a Cliente, destinada a los visitantes ocasionales. Su objetivo es categorizar de forma estricta a este segmento en el sistema. Aunque actualmente no tiene atributos adicionales, su existencia a nivel de base de datos permite aplicarles lógicas distintas (como cobrar siempre la tarifa base) y deja la estructura preparada por si en el futuro se requieren datos específicos solo para clientes casuales.

@@ -1,0 +1,21 @@
+{% extends "hoteleria/base.html" %}
+
+{% block title %}Inicio | Hoteleria CRUD{% endblock %}
+
+{% block content %}
+<h2>Panel principal</h2>
+<p>Selecciona una entidad para gestionar su informacion.</p>
+
+<ul class="entities">
+    <li><a href="{% url 'hoteleria:hotel_list' %}">Hoteles</a></li>
+    <li><a href="{% url 'hoteleria:tipohabitacion_list' %}">Tipos de habitacion</a></li>
+    <li><a href="{% url 'hoteleria:estado_list' %}">Estados</a></li>
+    <li><a href="{% url 'hoteleria:administrador_list' %}">Administradores</a></li>
+    <li><a href="{% url 'hoteleria:recepcionista_list' %}">Recepcionistas</a></li>
+    <li><a href="{% url 'hoteleria:cliente_list' %}">Clientes</a></li>
+    <li><a href="{% url 'hoteleria:habitual_list' %}">Habituales</a></li>
+    <li><a href="{% url 'hoteleria:esporadico_list' %}">Esporadicos</a></li>
+    <li><a href="{% url 'hoteleria:habitacion_list' %}">Habitaciones</a></li>
+    <li><a href="{% url 'hoteleria:reserva_list' %}">Reservas</a></li>
+</ul>
+{% endblock %}

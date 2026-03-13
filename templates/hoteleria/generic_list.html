@@ -1,0 +1,36 @@
+{% extends "hoteleria/base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<h2>{{ titulo }}</h2>
+
+<p>
+    <a class="button" href="{% url 'hoteleria:'|add:modelo|add:'_create' %}">Nuevo registro</a>
+    <a class="button secondary" href="{% url 'hoteleria:home' %}">Volver al inicio</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Registro</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for objeto in objetos %}
+        <tr>
+            <td>{{ objeto }}</td>
+            <td>
+                <a href="{% url 'hoteleria:'|add:modelo|add:'_update' objeto.pk %}">Editar</a> |
+                <a href="{% url 'hoteleria:'|add:modelo|add:'_delete' objeto.pk %}">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No hay registros.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
