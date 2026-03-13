@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
+from urllib.parse import parse_qs, unquote, urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,32 @@ def env(name: str, default: str = '') -> str:
 
 def env_bool(name: str, default: bool = False) -> bool:
     return env(name, str(default)).strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
+def database_config_from_url(database_url: str) -> dict:
+    parsed = urlparse(database_url)
+
+    if parsed.scheme not in {'postgres', 'postgresql', 'pgsql'}:
+        raise ValueError('DATABASE_URL debe usar el esquema postgres/postgresql.')
+
+    db_options = {}
+    query_params = parse_qs(parsed.query)
+    for key, values in query_params.items():
+        if not values:
+            continue
+        if key == 'channel_binding' and not env_bool('DB_ENABLE_CHANNEL_BINDING', False):
+            continue
+        db_options[key] = values[-1]
+
+    return {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed.path.lstrip('/'),
+        'USER': unquote(parsed.username or ''),
+        'PASSWORD': unquote(parsed.password or ''),
+        'HOST': parsed.hostname or 'localhost',
+        'PORT': str(parsed.port or '5432'),
+        'OPTIONS': db_options,
+    }
 
 
 load_env_file(BASE_DIR / '.env')
@@ -109,9 +136,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+database_url = env('DATABASE_URL', '').strip()
 db_engine = env('DB_ENGINE', 'django.db.backends.postgresql')
 
-if db_engine == 'django.db.backends.sqlite3':
+if database_url:
+    DATABASES = {
+        'default': database_config_from_url(database_url),
+    }
+elif db_engine == 'django.db.backends.sqlite3':
     db_name = env('DB_NAME', 'db.sqlite3')
     DATABASES = {
         'default': {
@@ -124,7 +156,7 @@ else:
     if env_bool('DB_SSL', False):
         db_options['sslmode'] = 'require'
     db_channel_binding = env('DB_CHANNEL_BINDING', '')
-    if db_channel_binding:
+    if db_channel_binding and env_bool('DB_ENABLE_CHANNEL_BINDING', False):
         db_options['channel_binding'] = db_channel_binding
 
     DATABASES = {
