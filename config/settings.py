@@ -84,10 +84,14 @@ DEBUG = env_bool('DJANGO_DEBUG', True)
 
 ALLOWED_HOSTS = [host.strip() for host in env('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',') if host.strip()]
 
-CSRF_TRUSTED_ORIGINS = [
+csrf_origins_raw = [
     origin.strip()
     for origin in env('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
     if origin.strip()
+]
+# Django 4+ exige esquema (http:// o https://). Ignoramos valores invalidos como '*'.
+CSRF_TRUSTED_ORIGINS = [
+    origin for origin in csrf_origins_raw if origin.startswith(('http://', 'https://'))
 ]
 
 
