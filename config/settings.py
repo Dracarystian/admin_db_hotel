@@ -94,6 +94,16 @@ CSRF_TRUSTED_ORIGINS = [
     origin for origin in csrf_origins_raw if origin.startswith(('http://', 'https://'))
 ]
 
+# Railway expone RAILWAY_PUBLIC_DOMAIN automaticamente.
+# Lo agregamos a ALLOWED_HOSTS y CSRF_TRUSTED_ORIGINS sin necesidad de configuracion manual.
+_railway_domain = env('RAILWAY_PUBLIC_DOMAIN', '').strip()
+if _railway_domain:
+    if _railway_domain not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_railway_domain)
+    _railway_origin = f'https://{_railway_domain}'
+    if _railway_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_railway_origin)
+
 
 # Application definition
 
